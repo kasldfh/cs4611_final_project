@@ -11,6 +11,7 @@ use Input;
 use DB;
 use Carbon\Carbon;
 use Auth;
+
 class listing_controller extends Controller
 {
     /**
@@ -54,9 +55,8 @@ class listing_controller extends Controller
       $useby = Input::get('useby');
       $quantity = Input::get('quantity');
       $date = Carbon::now()->format('Y-m-d');
-      dd($date);
       $producer = Auth::user()->producer_id;
-      DB::statement("INSERT INTO Product (day_produced, member_id, quantity, use_by, product_type) VALUES ($date, $producer, $quantity, $useby, \"$type\")");
+      DB::statement("INSERT INTO Product (day_produced, member_id, quantity, use_by, product_type) VALUES (\"$date\", $producer, $quantity, \"$useby\", lower(\"$type\"))");
       return redirect('/');
 
 
@@ -84,6 +84,8 @@ class listing_controller extends Controller
     public function edit($id)
     {
         //
+      $listing = DB::select( DB::raw("SELECT s.product_id, s.day_produced, s.quantity, s.use_by, s.product_type FROM Product s WHERE s.product_id = :selection"), ['selection' => $id, ])[0];
+      return View::make('listing.edit', compact('listing'));
     }
 
     /**
@@ -96,6 +98,12 @@ class listing_controller extends Controller
     public function update(Request $request, $id)
     {
         //
+        $quantity = $request->quantity;
+        $use_by = $request->useby;
+        $type = $request->product_type;
+        $producer_id = Auth::user()->producer_id;
+        DB::statement("UPDATE Product SET use_by = \"$use_by\", quantity = $quantity , product_type = lower(\"$type\") WHERE member_id = $producer_id AND product_id = $id");
+        return redirect('/listings');
     }
 
     /**
@@ -106,6 +114,9 @@ class listing_controller extends Controller
      */
     public function destroy($id)
     {
-        //
+        $producer_id = Auth::user()->producer_id;
+        DB::statement("DELETE FROM Product WHERE product_id = $id AND 
+            member_id = $producer_id");
+        return redirect('/listings');
     }
 }

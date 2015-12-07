@@ -12,8 +12,17 @@
       @endforeach
       </ul>
     @else
-      <button type="submit" class="btn btn-danger" name="delete">Delete</button>
-      <button type="submit" class="btn btn-primary" name="edit">Edit</button>
+        <form class="form" action="/listing/edit/{!!$listing->product_id!!}" 
+            method="get">
+          <input type="hidden" name="_token" value="{!!csrf_token()!!}">
+          <button type="submit" class="btn btn-primary" name="edit">Edit</button>
+        </form>
+
+        <form class="form" action="/listing/delete/{!!$listing->product_id!!}" 
+            method="post">
+          <input type="hidden" name="_token" value="{!!csrf_token()!!}">
+          <button type="submit" class="btn btn-danger" name="delete">Delete</button>
+        </form>
     @endif
   </li>
 @endforeach

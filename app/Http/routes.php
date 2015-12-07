@@ -12,9 +12,19 @@
 */
 
 Route::get('/listing', 'listing_controller@index');
+Route::get('/home', 'listing_controller@index');
 Route::get('/', 'listing_controller@index');
 Route::get('/listing/{id}', 'listing_controller@show');
-Route::post('/reserve', 'reserve_controller@create');
+
+Route::post('/listing/delete/{id}', ['middleware' => 'auth',
+    'uses' => 'listing_controller@destroy']);
+
+Route::get('/listing/edit/{id}', ['middleware' => 'auth',
+    'uses' => 'listing_controller@edit']);
+
+Route::post('/listing/update/{id}', ['middleware' => 'auth',
+    'uses' => 'listing_controller@update']);
+
 //route to see what listings this producer has
 Route::get('listings', ['middleware' => 'auth', 
     'uses' => 'producer_controller@view_available']);
@@ -27,6 +37,10 @@ Route::get('create', ['middleware' => 'auth',
 
 Route::post('/list', ['middleware' => 'auth',
     'uses' => 'listing_controller@store']);
+
+//routes for reservations
+Route::post('/reserve', 'reserve_controller@create');
+Route::post('/reserve/cancel/{id}', 'reserve_controller@destroy');
 
 // Authentication routes...
 Route::get('auth/login', 'Auth\AuthController@getLogin');

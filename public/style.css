@@ -2,3 +2,11 @@
    text-align: center;
 }
 
+.titleBar img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    opacity: 0.15;
+}

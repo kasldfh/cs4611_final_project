@@ -21,6 +21,7 @@
                 <a href="/">
                     <h1>Best Syrup Site Ever</h1>
                 </a>
+                <img src="alt-bg.jpg">
 	        </div>
 
             {{-- content --}}

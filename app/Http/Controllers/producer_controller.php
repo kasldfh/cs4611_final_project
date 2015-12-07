@@ -27,7 +27,7 @@ class producer_controller extends Controller
         $listings = DB::select(DB::raw("SELECT * FROM Product WHERE member_id = $user->producer_id"));
         for($i = 0; $i < sizeof($listings); $i++) {
             $id = $listings[$i]->product_id;
-            $reservation = DB::select(DB::raw("SELECT r.quantity, pr.name FROM Reserve r, Producer pr WHERE $id = r.product_id AND r.reciever_id = pr.member_id"));
+            $reservation = DB::select(DB::raw("SELECT r.product_id, r.quantity, pr.name FROM Reserve r, Producer pr WHERE $id = r.product_id AND r.reciever_id = pr.member_id"));
             $listings[$i]->reservations = $reservation;
 
         }
@@ -36,7 +36,7 @@ class producer_controller extends Controller
 
     public function view_reserved() {
         $user = Auth::user();
-        $reservations = DB::select(DB::raw("SELECT r.quantity, p.product_type, pr.name FROM Reserve r, Product p, Producer pr WHERE r.reciever_id = $user->producer_id AND r.product_id = p.product_id AND p.member_id = pr.member_id"));
+        $reservations = DB::select(DB::raw("SELECT r.reserve_id, r.quantity, p.product_type, pr.name FROM Reserve r, Product p, Producer pr WHERE r.reciever_id = $user->producer_id AND r.product_id = p.product_id AND p.member_id = pr.member_id"));
         return View::make('listing.reserved', compact('reservations'));
 
     }
