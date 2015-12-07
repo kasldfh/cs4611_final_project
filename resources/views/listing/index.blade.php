@@ -12,7 +12,11 @@
   <button id="sap" class="btn btn-default" onclick="sortBy('sap')">Sap only</button>
   <button id="syrup" class="btn btn-default" onclick="sortBy('syrup')">Syrup only</button>
   @foreach($listings as $listing)
-    <a href="/listing/{!!$listing->product_id!!}"><h2>{!!$listing->quantity - $listing->quantity_available!!} Liters of {!!$listing->product_type!!}<h2></a>
+  <?php if(!$listing->quantity_available) {
+      $listing->quantity_available = $listing->quantity;
+    }
+  ?>
+    <a href="/listing/{!!$listing->product_id!!}"><h2>{!!$listing->quantity_available!!} Liters of {!!$listing->product_type!!}<h2></a>
     <h3>Produced by {!!$listing->name!!}</h3>
     <h3>Ships from {!!$listing->city!!}, {!!$listing->state!!}</h3>
     <h3>Processed on {!!$listing->day_produced!!}. Expires on {!!$listing->use_by!!}</h3>

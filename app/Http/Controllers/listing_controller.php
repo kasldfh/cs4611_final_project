@@ -10,6 +10,7 @@ use View;
 use Input;
 use DB;
 use Carbon\Carbon;
+use Auth;
 class listing_controller extends Controller
 {
     /**
@@ -37,6 +38,7 @@ class listing_controller extends Controller
      */
     public function create()
     {
+      return View::make('listing.create');
         //
     }
 
@@ -48,6 +50,16 @@ class listing_controller extends Controller
      */
     public function store(Request $request)
     {
+      $type = Input::get('type');
+      $useby = Input::get('useby');
+      $quantity = Input::get('quantity');
+      $date = Carbon::now()->format('Y-m-d');
+      dd($date);
+      $producer = Auth::user()->producer_id;
+      DB::statement("INSERT INTO Product (day_produced, member_id, quantity, use_by, product_type) VALUES ($date, $producer, $quantity, $useby, \"$type\")");
+      return redirect('/');
+
+
         //
     }
 

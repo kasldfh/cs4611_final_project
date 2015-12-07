@@ -6,13 +6,12 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Input;
-use Carbon\Carbon;
-use DB;
+
 use Auth;
 use View;
+use DB;
 
-class reserve_controller extends Controller
+class producer_controller extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,6 +22,24 @@ class reserve_controller extends Controller
     {
         //
     }
+    public function view_available() {
+        $user = Auth::user();
+        $listings = DB::select(DB::raw("SELECT * FROM Product WHERE member_id = $user->producer_id"));
+        for($i = 0; $i < sizeof($listings); $i++) {
+            $id = $listings[$i]->product_id;
+            $reservation = DB::select(DB::raw("SELECT r.quantity, pr.name FROM Reserve r, Producer pr WHERE $id = r.product_id AND r.reciever_id = pr.member_id"));
+            $listings[$i]->reservations = $reservation;
+
+        }
+        return View::make('listing.available', compact('listings'));
+    }
+
+    public function view_reserved() {
+        $user = Auth::user();
+        $reservations = DB::select(DB::raw("SELECT r.quantity, p.product_type, pr.name FROM Reserve r, Product p, Producer pr WHERE r.reciever_id = $user->producer_id AND r.product_id = p.product_id AND p.member_id = pr.member_id"));
+        return View::make('listing.reserved', compact('reservations'));
+
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -31,14 +48,7 @@ class reserve_controller extends Controller
      */
     public function create()
     {
-      $product_id = Input::get('product_id');
-      $reserved_by = Auth::user()->producer_id;
-      $quantity = Input::get('quantity');
-      //TODO: rename sent, get current date
-      $date_sent = Carbon::now();
-
-      DB::statement( "INSERT INTO Reserve (product_id, reciever_id, date_sent, quantity) VALUES(:p_id, :r_id, :sent, :quantity)", ['p_id' => $product_id, 'r_id' => $reserved_by, 'sent' => $date_sent, 'quantity' => $quantity]);
-      return View::make('reservation.created');
+        //
     }
 
     /**
