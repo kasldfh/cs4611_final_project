@@ -7,6 +7,7 @@ city   varchar(32) NOT NULL,
 state varchar(2) NOT NULL,
 password varchar(60) NOT NULL,
 remember_token varchar(100),
+email varchar(80) NOT NULL,
 PRIMARY KEY (member_id),
 CHECK (lower(state) IN ('mn', 'mi', 'wi', 'oh', 'pa', 'ny', 'vt', 'me', 'ct', 'ma',
         'nh', ''))
@@ -14,8 +15,11 @@ CHECK (lower(state) IN ('mn', 'mi', 'wi', 'oh', 'pa', 'ny', 'vt', 'me', 'ct', 'm
 
 CREATE TABLE Product
 (product_id int AUTO_INCREMENT,
+post_date  DATE,
 day_produced DATE,
 member_id varchar(10),
+bach_id varchar(80) UNIQUE,
+price varchar(80) NOT NULL,
 quantity float NOT NULL,
 use_by DATE,
 product_type varchar(5),
