@@ -21,7 +21,7 @@
        <th>Date Produced</th>
        <th>Expiration Date</th>
        <th>Vendor</th>
-       <th>View</th>
+       <th>Ships From</th>
    </tr>
 <?php $i = 1;?>
   @foreach($listings as $listing)
@@ -35,7 +35,7 @@
       <td>{!!$listing->day_produced!!}</td> 
       <td>{!!$listing->use_by!!}</td> 
       <td>{!!$listing->producer_name!!}</td> 
-      <td>lelele</td> 
+      <td>{!!$listing->city!!}, {!!$listing->state!!}</td> 
     </tr>
     <?php $i++;?>
 

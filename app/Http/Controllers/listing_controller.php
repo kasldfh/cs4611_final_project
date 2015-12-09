@@ -23,10 +23,10 @@ class listing_controller extends Controller
     {
       $listings;
       if(Input::has('sort')) {
-        $listings = DB::select( DB::raw("SELECT p.name as producer_name, p.city, p.state, p.batch_id, s.product_id, s.day_produced, s.quantity, s.price, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE p.member_id = s.member_id AND s.product_type_id = t.type_id AND lower(t.type_name) = lower(:type_value)"), ['type_value' => Input::get('sort'), ]);
+        $listings = DB::select( DB::raw("SELECT p.name as producer_name, p.city, p.state, s.batch_id, s.product_id, s.day_produced, s.quantity, s.price, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE p.member_id = s.member_id AND s.product_type_id = t.type_id AND lower(t.type_name) = lower(:type_value)"), ['type_value' => Input::get('sort'), ]);
       }
       else {
-        $listings = DB::select( DB::raw( "SELECT p.name as producer_name, p.city, p.state, p.batch_id, s.product_id, s.day_produced, s.quantity, s.price, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE p.member_id = s.member_id AND s.product_type_id = t.type_id"
+        $listings = DB::select( DB::raw( "SELECT p.name as producer_name, p.city, p.state, s.batch_id, s.product_id, s.day_produced, s.quantity, s.price, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE p.member_id = s.member_id AND s.product_type_id = t.type_id"
         ));
       }
         return View::make('listing.index', compact('listings'));
@@ -76,7 +76,7 @@ class listing_controller extends Controller
      */
     public function show($id)
     {
-      $listing = DB::select( DB::raw("SELECT p.name, p.city, p.state, s.product_id, s.day_produced, s.quantity, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, p.batch_id, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE s.product_type_id = t.type_id AND p.member_id = s.member_id AND s.product_id = :selection"), ['selection' => $id, ])[0];
+      $listing = DB::select( DB::raw("SELECT p.name, p.city, p.state, s.product_id, s.day_produced, s.quantity, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, s.batch_id, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE s.product_type_id = t.type_id AND p.member_id = s.member_id AND s.product_id = :selection"), ['selection' => $id, ])[0];
       return View::make('listing.show', compact('listing'));
     }
 

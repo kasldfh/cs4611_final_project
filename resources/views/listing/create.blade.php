@@ -12,7 +12,7 @@
 <br>
 <br>
 
-<label for="batch_id">Price</label>
+<label for="batch_id">Batch ID</label>
 <input name="batch_id"></input>
 <br>
 <br>
