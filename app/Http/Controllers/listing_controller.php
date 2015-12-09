@@ -23,10 +23,10 @@ class listing_controller extends Controller
     {
       $listings;
       if(Input::has('sort')) {
-        $listings = DB::select( DB::raw("SELECT p.name, p.city, p.state, s.product_id, s.day_produced, s.quantity, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE p.member_id = s.member_id AND s.product_type_id = t.type_id AND lower(t.type_name) = lower(:type_value)"), ['type_value' => Input::get('sort'), ]);
+        $listings = DB::select( DB::raw("SELECT p.name as producer_name, p.city, p.state, s.product_id, s.day_produced, s.quantity, s.price, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE p.member_id = s.member_id AND s.product_type_id = t.type_id AND lower(t.type_name) = lower(:type_value)"), ['type_value' => Input::get('sort'), ]);
       }
       else {
-        $listings = DB::select( DB::raw( "SELECT p.name, p.city, p.state, s.product_id, s.day_produced, s.quantity, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE p.member_id = s.member_id AND s.product_type_id = t.type_id"
+        $listings = DB::select( DB::raw( "SELECT p.name as producer_name, p.city, p.state, s.product_id, s.day_produced, s.quantity, s.price, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE p.member_id = s.member_id AND s.product_type_id = t.type_id"
         ));
       }
         return View::make('listing.index', compact('listings'));
@@ -39,7 +39,8 @@ class listing_controller extends Controller
      */
     public function create()
     {
-      return View::make('listing.create');
+        $types = DB::select(DB::raw("SELECT * FROM Product_type"));
+        return View::make('listing.create', compact('types'));
         //
     }
 
@@ -57,7 +58,9 @@ class listing_controller extends Controller
       $post = Carbon::now()->format('Y-m-d');
       $date = Input::get('date_produced');
       $producer = Auth::user()->producer_id;
-      DB::statement("INSERT INTO Product (post_date, day_produced, member_id, quantity, use_by, product_type_id) VALUES (\"$post\", $date, $producer, $quantity, \"$useby\", $type))");
+      $price = Input::get('price');
+
+      DB::statement("INSERT INTO Product (post_date, day_produced, member_id, quantity, use_by, product_type_id, price) VALUES (\"$post\", \"$date\", $producer, $quantity, \"$useby\", $type, $price)");
       return redirect('/');
 
 
