@@ -14,7 +14,8 @@ state varchar(2) NOT NULL,
 email varchar(80) NOT NULL,
 PRIMARY KEY (member_id),
 CHECK (lower(state) IN ('mn', 'mi', 'wi', 'oh', 'pa', 'ny', 'vt', 'me', 'ct', 'ma',
-        'nh', ''))
+        'nh', '')),
+ON DELETE CASCADE
 );
 
 CREATE TABLE Product
