@@ -29,8 +29,9 @@ use_by DATE,
 product_type_id int,
 PRIMARY KEY (product_id),
 FOREIGN KEY (member_id) REFERENCES Producer(member_id),
+ON DELETE CASCADE ON UPDATE CASCADE,
 FOREIGN KEY (product_type_id) REFERENCES Product_type(type_id),
-ON DELETE CASCADE
+ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Reserve
@@ -42,7 +43,8 @@ quantity float NOT NULL,
 expected_arrival  DATE,
 PRIMARY KEY (reserve_id),
 FOREIGN KEY (reciever_id) REFERENCES Producer(member_id),
+ON DELETE CASCADE ON UPDATE CASCADE,
 FOREIGN KEY (product_id) REFERENCES Product(product_id),
-ON DELETE CASCADE
+ON DELETE CASCADE ON UPDATE CASCADE
 );
 
