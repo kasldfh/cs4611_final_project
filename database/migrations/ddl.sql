@@ -14,8 +14,7 @@ state varchar(2) NOT NULL,
 email varchar(80) NOT NULL,
 PRIMARY KEY (member_id),
 CHECK (lower(state) IN ('mn', 'mi', 'wi', 'oh', 'pa', 'ny', 'vt', 'me', 'ct', 'ma',
-        'nh', '')),
-ON DELETE CASCADE
+        'nh', ''))
 );
 
 CREATE TABLE Product
@@ -30,7 +29,8 @@ use_by DATE,
 product_type_id int,
 PRIMARY KEY (product_id),
 FOREIGN KEY (member_id) REFERENCES Producer(member_id),
-FOREIGN KEY (product_type_id) REFERENCES Product_type(type_id)
+FOREIGN KEY (product_type_id) REFERENCES Product_type(type_id),
+ON DELETE CASCADE
 );
 
 CREATE TABLE Reserve
@@ -42,6 +42,7 @@ quantity float NOT NULL,
 expected_arrival  DATE,
 PRIMARY KEY (reserve_id),
 FOREIGN KEY (reciever_id) REFERENCES Producer(member_id),
-FOREIGN KEY (product_id) REFERENCES Product(product_id)
+FOREIGN KEY (product_id) REFERENCES Product(product_id),
+ON DELETE CASCADE
 );
 
