@@ -36,9 +36,9 @@ CREATE TABLE Reserve
 (reserve_id integer AUTO_INCREMENT, 
 product_id  int,
 reciever_id varchar(10),
-date_sent DATE NOT NULL,
+date_sent DATE,
 quantity float NOT NULL,
-expected_arrival  DATE,
+order_date  DATE NOT NULL,
 PRIMARY KEY (reserve_id),
 FOREIGN KEY (reciever_id) REFERENCES Producer(member_id),
 FOREIGN KEY (product_id) REFERENCES Product(product_id)
