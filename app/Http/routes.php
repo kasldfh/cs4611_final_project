@@ -9,43 +9,50 @@
 | It's a breeze. Simply tell Laravel the URIs it should respond to
 | and give it the controller to call when that URI is requested.
 |
-*/
+ */
 
-Route::get('/listing', 'listing_controller@index');
-Route::get('/home', 'listing_controller@index');
-Route::get('/', 'listing_controller@index');
-Route::get('/listing/{id}', 'listing_controller@show');
+Route::group(['middleware' => 'auth'], function() {
 
-Route::post('/listing/delete/{id}', ['middleware' => 'auth',
-    'uses' => 'listing_controller@destroy']);
+  Route::get('/listing', 'listing_controller@index');
+  Route::get('/home', 'listing_controller@index');
+  Route::get('/', 'listing_controller@index');
+  Route::get('/listing/{id}', 'listing_controller@show');
 
-Route::get('/listing/edit/{id}', ['middleware' => 'auth',
-    'uses' => 'listing_controller@edit']);
+  Route::post('/listing/delete/{id}', 'listing_controller@destroy');
 
-Route::post('/listing/update/{id}', ['middleware' => 'auth',
-    'uses' => 'listing_controller@update']);
+  Route::get('/listing/edit/{id}', 'listing_controller@edit');
 
-//route to see what listings this producer has
-Route::get('listings', ['middleware' => 'auth', 
-    'uses' => 'producer_controller@view_available']);
+  Route::post('/listing/update/{id}', 'listing_controller@update');
 
-Route::get('reserved', ['middleware' => 'auth', 
-    'uses' => 'producer_controller@view_reserved']);
+  //route to see what listings this producer has
+  Route::get('listings', 'producer_controller@view_available');
 
-Route::get('create', ['middleware' => 'auth',
-    'uses' => 'listing_controller@create']);
+  Route::get('reserved', 'producer_controller@view_reserved');
 
-Route::post('/list', ['middleware' => 'auth',
-    'uses' => 'listing_controller@store']);
+  Route::get('create', 'listing_controller@create');
 
-//routes for reservations
-Route::post('/reserve', 'reserve_controller@create');
-Route::post('/reserve/cancel/{id}', 'reserve_controller@destroy');
+  Route::post('/list', 'listing_controller@store');
+
+  //routes for reservations
+  Route::post('/reserve', 'reserve_controller@create');
+  Route::post('/reserve/cancel/{id}', 'reserve_controller@destroy');
+
+
+  // Authentication routes...
+  Route::get('auth/logout', 'Auth\AuthController@getLogout');
+
+  Route::group(['middleware' => 'admin'], function() {
+    Route::get('/admin', 'admin_controller@index');
+    Route::get('/producer/create', 'producer_controller@create');
+    Route::post('/producer/store', 'producer_controller@store');
+    Route::get('/producer/manage', 'producer_controller@manage');
+    Route::get('/producer/delete/{id}', 'producer_controller@destroy');
+  });
+});
 
 // Authentication routes...
 Route::get('auth/login', 'Auth\AuthController@getLogin');
 Route::post('auth/login', 'Auth\AuthController@postLogin');
-Route::get('auth/logout', 'Auth\AuthController@getLogout');
 
 // Registration routes...
 Route::get('auth/register', 'Auth\AuthController@getRegister');

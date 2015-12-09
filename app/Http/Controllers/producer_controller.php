@@ -22,9 +22,15 @@ class producer_controller extends Controller
     {
         //
     }
+
+    public function manage() {
+        $producers = DB::select(DB::raw("SELECT * from Producer"));
+        return View::make('producer.manage', compact('producers'));
+    }
+
     public function view_available() {
         $user = Auth::user();
-        $listings = DB::select(DB::raw("SELECT * FROM Product WHERE member_id = $user->producer_id"));
+        $listings = DB::select(DB::raw("SELECT Product.product_id, Product.quantity, Product.price, Product.day_produced, Product.use_by, Product_type.type_name as product_type FROM Product NATURAL JOIN Product_type WHERE member_id = $user->producer_id"));
         for($i = 0; $i < sizeof($listings); $i++) {
             $id = $listings[$i]->product_id;
             $reservation = DB::select(DB::raw("SELECT r.product_id, r.quantity, pr.name FROM Reserve r, Producer pr WHERE $id = r.product_id AND r.reciever_id = pr.member_id"));
@@ -81,7 +87,7 @@ class producer_controller extends Controller
      */
     public function edit($id)
     {
-        //
+        return View::make('producer.update');
     }
 
     /**
@@ -104,6 +110,7 @@ class producer_controller extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::statement("DELETE FROM Producer WHERE member_id = $id");
+        return redirect('/producer/manage');
     }
 }

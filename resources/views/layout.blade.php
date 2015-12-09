@@ -1,46 +1,74 @@
-<html>
-    <head>
-        <title>@yield('title')</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.1/css/select2.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-
-    <link rel="shortcut icon" href=url(favcion.ico)>
-    <link rel="stylesheet" href="style.css">
+<html lang="=en">
+  <head>
+    <meta charset="utf-8">
+    <title>@yield('title')</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src="/js/script.js"></script>
     @yield('style')
-    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     @yield('js')
-
-    </head>
-    <body>
-        <div class="container">
-            {{-- header --}}
-	        <div class="titleBar">
-                <a href="/">
-                    <h1>Best Syrup Site Ever</h1>
-                </a>
-                <img src="alt-bg.jpg">
-	        </div>
-
-            {{-- content --}}
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    @yield('content')
-                </div>
-            </div>
-
-            {{-- footer --}}
-             <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="footer-container">
-                    <hr>
-                    <footer><center> © Mazin Jindeel and Kris Samuelson 2015 </center></footer>
-                </div>
-                </div>
-            </div>
+  </head>
+  <body>
+    @if(Auth::user())
+    <!-- TOP BAR -->
+    	<div id="top-bar">
+    		
+    		<div class="page-full-width cf">
+    
+    			<ul id="nav" class="fl">
+    	
+    				<li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong><?php echo Auth::user()->name?></strong></a>
+    					<ul>
+    						<li><a href="change_password.php">Change Password</a></li>
+    					</ul> 
+    				</li>
+    			<li><a href="update_details.php" class="round button dark menu-settings image-left">Update Store Details</a></li>
+    				<li><a href="/auth/logout" class="round button dark menu-logoff image-left">Log out</a></li>
+    				
+    			</ul> <!-- end nav -->
+    
+    					
+    			<form action="/auth/logout" method="POST" id="search-form" class="fr">
+    				<fieldset>
+    				<a href="/auth/logout" class="round button dark menu-logoff image-left">Log out</a>
+    				</fieldset>
+    			</form>
+    
+    		</div> <!-- end full-width -->	
+    	
+    	</div> <!-- end top-bar -->
+        <div id="header-with-tabs">
+    
+        <div class="page-full-width cf">
+     
+            <ul id="tabs" class="fl">
+                <li><a href="/admin" class="active-tab dashboard-tab">Dashboard</a></li>
+                <li><a href="/listings" class="purchase-tab">Selling</a></li>
+                <li><a href="/reserved" class="sales-tab">Buying</a></li>
+                <li><a href="/listing" class=" stock-tab">Store</a></li>
+                <li><a href="view_report.php" class="report-tab">Reports</a></li>
+            </ul>
+            <!-- end tabs -->
+    
+            <!-- Change this image to your own company's logo -->
+            <!-- The logo will automatically be resized to 30px height. -->
+            <?php //$line = $db->queryUniqueObject("SELECT * FROM store_details ");
+            //$_SESSION['logo'] = $line->log;
+            ?>
+            <a href="#" id="company-branding-small" class="fr"><img src="/upload/posnic.png"
+                alt="Point of Sale"/></a>
+    
         </div>
+        <!-- end full-width -->
+    
+    </div>
+    @endif
+    @yield('header')
+    <div id="content">
+      <div class="page-full-width cf">
+        @yield('content')
+      </div>
+    </div>
 
-    </body>
+  </body>
 </html>
