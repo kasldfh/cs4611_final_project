@@ -35,9 +35,9 @@ class reserve_controller extends Controller
       $reserved_by = Auth::user()->producer_id;
       $quantity = Input::get('quantity');
       //TODO: rename sent, get current date
-      $date_sent = Carbon::now();
+      $order_date = Carbon::now();
 
-      DB::statement( "INSERT INTO Reserve (product_id, reciever_id, date_sent, quantity) VALUES(:p_id, :r_id, :sent, :quantity)", ['p_id' => $product_id, 'r_id' => $reserved_by, 'sent' => $date_sent, 'quantity' => $quantity]);
+      DB::statement( "INSERT INTO Reserve (product_id, reciever_id, quantity, order_date) VALUES(:p_id, :r_id, :quantity, :date)", ['p_id' => $product_id, 'r_id' => $reserved_by, 'quantity' => $quantity, 'date' => $order_date]);
       return View::make('reservation.created');
     }
 
