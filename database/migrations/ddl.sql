@@ -1,3 +1,9 @@
+CREATE TABLE Product_type
+(type_id  int AUTO_INCREMENT,
+type_name  varchar(20) NOT NULL,
+PRIMARY KEY (type_id)
+);
+
 CREATE TABLE Producer
 (member_id varchar(10),
 name varchar(32) NOT NULL,
@@ -22,10 +28,10 @@ bach_id varchar(80) UNIQUE,
 price varchar(80) NOT NULL,
 quantity float NOT NULL,
 use_by DATE,
-product_type varchar(5),
-CHECK (lower(product_type) IN ('sap', 'syrup')),
+product_type_id int,
 PRIMARY KEY (product_id),
-FOREIGN KEY (member_id) REFERENCES Producer(member_id)
+FOREIGN KEY (member_id) REFERENCES Producer(member_id),
+FOREIGN KEY (product_type_id) REFERENCES Product_type(type_id)
 );
 
 CREATE TABLE Reserve
