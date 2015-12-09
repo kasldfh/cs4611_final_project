@@ -36,7 +36,7 @@ class producer_controller extends Controller
 
     public function view_reserved() {
         $user = Auth::user();
-        $reservations = DB::select(DB::raw("SELECT r.reserve_id, r.quantity, p.product_type, pr.name FROM Reserve r, Product p, Producer pr WHERE r.reciever_id = $user->producer_id AND r.product_id = p.product_id AND p.member_id = pr.member_id"));
+        $reservations = DB::select(DB::raw("SELECT r.reserve_id, r.quantity, t.type_name as product_type, pr.name FROM Reserve r, Product p, Producer pr, Product_type t WHERE t.type_id = p.product_type_id AND r.reciever_id = $user->producer_id AND r.product_id = p.product_id AND p.member_id = pr.member_id"));
         return View::make('listing.reserved', compact('reservations'));
 
     }
