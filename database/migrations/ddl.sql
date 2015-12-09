@@ -22,7 +22,7 @@ CREATE TABLE Product
 post_date  DATE,
 day_produced DATE,
 member_id varchar(10),
-batch_id varchar(80) UNIQUE,
+batch_id varchar(80) NOT NULL UNIQUE,
 price float NOT NULL,
 quantity float NOT NULL,
 use_by DATE,
