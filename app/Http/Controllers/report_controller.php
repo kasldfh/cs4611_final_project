@@ -83,7 +83,7 @@ class report_controller extends Controller
      */
     public function create()
     {
-        echo "<html>" . "<head>" . "<title>Reports</title>" . "</head>" . "<body>" . "<table border='4' class='stats' cellspacing='0'>
+        echo "<html>" . "<head>" . "<title>Product Report</title>" . "</head>" . "<body>" . "<div><h1>Product Report</h1></div>" . "<div>" . "<table border='4' class='stats' cellspacing='0'>
             <tr>
             <td class='hed' colspan='8'>Product Report</td>
               </tr>
@@ -99,9 +99,9 @@ class report_controller extends Controller
             <th>Product Type</th>
             </tr>";
             $data;
-            if (Input::has('selling')) {
+            if (Input::has('sell')) {
             	$data = fetch_buyers();
-            } else if (Input::has('buying')) {
+            } else if (Input::has('buy')) {
             	$data = fetch_reservations();
             } else {
             	$data = fetch_products();
@@ -119,7 +119,16 @@ class report_controller extends Controller
               	. "<td>" . $value["product_type"] . "</td>"
               	. "</tr>";
             }
-    	echo "</table>"
+    	echo "</table>" . "<br>
+	<button onclick=\"myFunction()\" id = \"print\">Print Report</button>
+
+	<script>
+		function myFunction() {
+			document.getElementById(\"print\").style.visibility = \"hidden\";
+   			window.print();
+   			document.getElementById(\"print\").style.visibility = \"visible\";
+		}
+	</script>" . "</div>"
 		. "</body>"
 		. "</html>";
     }
