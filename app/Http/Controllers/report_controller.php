@@ -83,7 +83,9 @@ class report_controller extends Controller
      */
     public function create()
     {
-        echo "<html>" . "<head>" . "<title>Product Report</title>" . "</head>" . "<body>" . "<div><h1>Product Report</h1></div>" . "<div>" . "<table border='4' class='stats' cellspacing='0'>
+        echo "<html>" . "<head>" . "<title>Product Report</title>"
+            . "<link rel=\"stylesheet\" href=\"/report.css\">" . "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" . "</head>"
+            . "<body>" . "<div><h1>Product Report</h1></div>" . "<div>" . "<table border='4' class='stats' cellspacing='0'>
             <tr>
             <td class='hed' colspan='8'>Product Report</td>
               </tr>
