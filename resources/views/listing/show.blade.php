@@ -16,11 +16,10 @@
       <input type="hidden" name="_token" value="{!!csrf_token()!!}">
 
       <div class="form-group">
-        <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+        <label class="sr-only" for="exampleInputAmount">Quantity</label>
         <div class="input-group">
           <input type="text" class="form-control" id="quantity" 
             placeholder="Amount" name="quantity">
-          <div class="input-group-addon">Liters</div>
         </div>
       </div>
       <button type="submit" class="btn btn-primary">Reserve</button>

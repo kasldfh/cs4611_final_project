@@ -11,15 +11,35 @@
   <button id="all" class="btn btn-default" onclick="sortBy('all')">All Listings</button>
   <button id="sap" class="btn btn-default" onclick="sortBy('sap')">Sap only</button>
   <button id="syrup" class="btn btn-default" onclick="sortBy('syrup')">Syrup only</button>
+<table>
+   <tr>
+       <th>No</th>
+       <th>Product Type</th>
+       <th>Price</th>
+       <th>Batch ID</th>
+       <th>Quantity</th>
+       <th>Date Produced</th>
+       <th>Expiration Date</th>
+       <th>Vendor</th>
+       <th>Ships From</th>
+   </tr>
+<?php $i = 1;?>
   @foreach($listings as $listing)
-  <?php if(!$listing->quantity_available) {
-      $listing->quantity_available = $listing->quantity;
-    }
-  ?>
-    <a href="/listing/{!!$listing->product_id!!}"><h2>{!!$listing->quantity_available!!} Liters of {!!$listing->product_type!!}<h2></a>
-    <h3>Produced by {!!$listing->name!!}</h3>
-    <h3>Ships from {!!$listing->city!!}, {!!$listing->state!!}</h3>
-    <h3>Processed on {!!$listing->day_produced!!}. Expires on {!!$listing->use_by!!}</h3>
-    <hr>
+    <tr>
+      <?php if(is_null($listing->quantity_available)) $listing->quantity_available = $listing->quantity;?>
+      <td>{!!$i!!}</td> 
+      <td><a href="/listing/{!!$listing->product_id!!}">{!!$listing->product_type!!}</a></td>
+      <td>{!!$listing->price!!}</td> 
+      <td>{!!$listing->batch_id!!}</td> 
+      <td>{!!$listing->quantity_available!!}</td> 
+      <td>{!!$listing->day_produced!!}</td> 
+      <td>{!!$listing->use_by!!}</td> 
+      <td>{!!$listing->producer_name!!}</td> 
+      <td>{!!$listing->city!!}, {!!$listing->state!!}</td> 
+    </tr>
+    <?php $i++;?>
+
+      
   @endforeach
+</table>
 @endsection
