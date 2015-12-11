@@ -10,46 +10,60 @@ use App\Http\Controllers\Controller;
 class report_controller extends Controller
 {
 
-    //Query to get products for user.
-	public function fetch_products() {
-		$user = Auth::user();
-		$result;
-		$lowDate = Input::get('start_date');
-		$highDate = Input::get('end_date');
-		if (Input::has('all')) {
-			$result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = $user"));
-		} else {
-			$result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = $user AND p.post_date BETWEEN $lowDate AND $highDate"));
-		}
-		return $result;
-	}
-	//Query to get buying report for user.
-	public function fetch_buyers() {
-		$user = Auth::user();
-		$result;
-		$lowDate = Input::get('start_date');
-		$highDate = Input::get('end_date');
-		if (Input::has('all')) {
-			$result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = $user AND r.order_date BETWEEN $lowDate AND $highDate"));
-		} else {
-			$result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = $user"));		
-		}
-		return $result;
-	}
 
-	//Query to get reservations (selling) report for user.
-	public function fetch_reservations() {
-		$user = Auth::user();
-		$result;
-		$lowDate = Input::get('start_date');
-		$highDate = Input::get('end_date');
-		if (Input::has('all')) {
-			$result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = $user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id AND p.post_date BETWEEN $lowDate AND $highDate"));
-		} else {
-			$result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = $user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id"));		
-		}
-		return $result;
-	}
+    /**
+     * Obtain the lists of all of users products that are for sale.
+     *
+     * @return query result
+     */
+    public function fetch_products() {
+        $user = Auth::user();
+        $result;
+	$lowDate = Input::get('start_date');
+	$highDate = Input::get('end_date');
+        if (Input::has('all')) {
+              $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = $user"));
+         } else {
+              $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = $user AND p.post_date BETWEEN $lowDate AND $highDate"));
+         }
+         return $result;
+    }
+    /**
+     * Obtain a buying report's content.
+     *
+     * @return query result
+     */
+    public function fetch_buyers() {
+        $user = Auth::user();
+        $result;
+        $lowDate = Input::get('start_date');
+        $highDate = Input::get('end_date');
+        if (Input::has('all')) {
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = $user AND r.order_date BETWEEN $lowDate AND $highDate"));
+        } else {
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = $user"));		
+        }
+        return $result;
+    }
+
+    /**
+     * Obtain the list of reservations made by user.
+     *
+     * @return query result
+     */
+    public function fetch_reservations() {
+        $user = Auth::user();
+        $result;
+        $lowDate = Input::get('start_date');
+        $highDate = Input::get('end_date');
+        if (Input::has('all')) {
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = $user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id AND p.post_date BETWEEN $lowDate AND $highDate"));
+        } else {
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = $user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id"));		
+        }
+        return $result;
+    }
+
 
 
     /**
