@@ -9,6 +9,49 @@ use App\Http\Controllers\Controller;
 
 class report_controller extends Controller
 {
+
+    //Query to get products for user.
+	public function fetch_products() {
+		$user = Auth::user();
+		$result;
+		$lowDate = Input::get('start_date');
+		$highDate = Input::get('end_date');
+		if (Input::has('all')) {
+			$result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = $user"));
+		} else {
+			$result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = $user AND p.post_date BETWEEN $lowDate AND $highDate"));
+		}
+		return $result;
+	}
+	//Query to get buying report for user.
+	public function fetch_buyers() {
+		$user = Auth::user();
+		$result;
+		$lowDate = Input::get('start_date');
+		$highDate = Input::get('end_date');
+		if (Input::has('all')) {
+			$result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = $user AND r.order_date BETWEEN $lowDate AND $highDate"));
+		} else {
+			$result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = $user"));		
+		}
+		return $result;
+	}
+
+	//Query to get reservations (selling) report for user.
+	public function fetch_reservations() {
+		$user = Auth::user();
+		$result;
+		$lowDate = Input::get('start_date');
+		$highDate = Input::get('end_date');
+		if (Input::has('all')) {
+			$result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = $user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id AND p.post_date BETWEEN $lowDate AND $highDate"));
+		} else {
+			$result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = $user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id"));		
+		}
+		return $result;
+	}
+
+
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +69,45 @@ class report_controller extends Controller
      */
     public function create()
     {
-        //
+        echo "<html>" . "<head>" . "<title>Reports</title>" . "</head>" . "<body>" . "<table border='4' class='stats' cellspacing='0'>
+            <tr>
+            <td class='hed' colspan='8'>Product Report</td>
+              </tr>
+            <tr>";
+            if (Input::has('products')) {
+            	echo "<th>Producer Name</th>";
+            }
+            echo "<th>Day Produced</th>
+            <th>Use By</th>
+            <th>Batch ID</th>
+            <th>Price</th>
+            <th>Total Quantity</th>
+            <th>Product Type</th>
+            </tr>";
+            $data;
+            if (Input::has('selling')) {
+            	$data = fetch_buyers();
+            } else if (Input::has('buying')) {
+            	$data = fetch_reservations();
+            } else {
+            	$data = fetch_products();
+            }
+            foreach ($data->fetch_assoc() as $value) {
+            	echo "<tr>";
+            	if (Input::has('products')) {
+            		echo "<td>" . $value["name"] . "</td>";
+            	}
+              	echo "<td>" . $value["day_produced"] . "</td>"
+              	. "<td>" . $value["use_by"] . "</td>"
+              	. "<td>" . $value["batch_id"] . "</td>"
+              	. "<td>" . $value["price"] . "</td>"
+              	. "<td>" . $value["quantity"] . "</td>"
+              	. "<td>" . $value["product_type"] . "</td>"
+              	. "</tr>";
+            }
+    	echo "</table>"
+		. "</body>"
+		. "</html>";
     }
 
     /**
