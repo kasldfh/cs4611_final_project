@@ -30,7 +30,7 @@ class producer_controller extends Controller
 
     public function view_available() {
         $user = Auth::user();
-        $listings = DB::select(DB::raw("SELECT Product.product_id, Product.quantity, Product.price, Product.day_produced, Product.use_by, Product_type.type_name as product_type FROM Product, Product_type WHERE member_id = :user->producer_id AND Product.product_type_id = Product_type.type_id"), ['user' => $user]);
+        $listings = DB::select(DB::raw("SELECT Product.product_id, Product.quantity, Product.price, Product.day_produced, Product.use_by, Product_type.type_name as product_type FROM Product, Product_type WHERE member_id = :producer_id AND Product.product_type_id = Product_type.type_id"), ['producer_id' => $user->producer_id]);
         for($i = 0; $i < sizeof($listings); $i++) {
             $id = $listings[$i]->product_id;
             $reservation = DB::select(DB::raw("SELECT r.product_id, r.quantity, pr.name FROM Reserve r, Producer pr WHERE :id = r.product_id AND r.reciever_id = pr.member_id"), ['id' => $id,]);
@@ -42,7 +42,7 @@ class producer_controller extends Controller
 
     public function view_reserved() {
         $user = Auth::user();
-        $reservations = DB::select(DB::raw("SELECT r.reserve_id, r.quantity, r.order_date, p.price, p.batch_id, p.day_produced, p.use_by, t.type_name as product_type, pr.name FROM Reserve r, Product p, Producer pr, Product_type t WHERE t.type_id = p.product_type_id AND r.reciever_id = :user->producer_id AND r.product_id = p.product_id AND p.member_id = pr.member_id"), ['user' => $user]);
+        $reservations = DB::select(DB::raw("SELECT r.reserve_id, r.quantity, r.order_date, p.price, p.batch_id, p.day_produced, p.use_by, t.type_name as product_type, pr.name FROM Reserve r, Product p, Producer pr, Product_type t WHERE t.type_id = p.product_type_id AND r.reciever_id = :producer_id AND r.product_id = p.product_id AND p.member_id = pr.member_id"), ['producer_id' => $user->producer_id]);
         return View::make('listing.reserved', compact('reservations'));
 
     }
