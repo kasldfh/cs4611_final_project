@@ -94,7 +94,7 @@ class reserve_controller extends Controller
      */
     public function destroy($id)
     {
-        DB::statement("DELETE FROM Reserve WHERE reserve_id = $id");
+        DB::statement("DELETE FROM Reserve WHERE reserve_id = :id", ['id' => $id]);
         return redirect('/reserved');
     }
 }

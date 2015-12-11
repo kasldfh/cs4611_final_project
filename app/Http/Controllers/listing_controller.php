@@ -61,7 +61,7 @@ class listing_controller extends Controller
       $price = Input::get('price');
       $batch = Input::get('batch_id');
 
-      DB::statement("INSERT INTO Product (post_date, day_produced, member_id, quantity, use_by, product_type_id, price, batch_id) VALUES (\"$post\", \"$date\", $producer, $quantity, \"$useby\", $type, $price, \"$batch\")");
+      DB::statement("INSERT INTO Product (post_date, day_produced, member_id, quantity, use_by, product_type_id, price, batch_id) VALUES (\"?\", \"?\", ?, ?, \"?\", ?, ?, \"?\")", [$post, $date, $producer, $quantity, $useby, $type, $price, $batch]);
       return redirect('/');
 
 
@@ -106,7 +106,7 @@ class listing_controller extends Controller
         $use_by = $request->useby;
         $type = $request->product_type;
         $producer_id = Auth::user()->producer_id;
-        DB::statement("UPDATE Product SET use_by = \"$use_by\", quantity = $quantity , product_type_id = $type WHERE member_id = $producer_id AND product_id = $id");
+        DB::statement("UPDATE Product SET use_by = \":use\", quantity = :quantity , product_type_id = :type WHERE member_id = :producer_id AND product_id = :id", ['use' => $use_by, 'quantity' => $quantity, 'type' => $type, 'producer_id' => $producer_id, 'id' => $id]);
         return redirect('/listings');
     }
 
@@ -119,8 +119,8 @@ class listing_controller extends Controller
     public function destroy($id)
     {
         $producer_id = Auth::user()->producer_id;
-        DB::statement("DELETE FROM Product WHERE product_id = $id AND 
-            member_id = $producer_id");
+        DB::statement("DELETE FROM Product WHERE product_id = :id AND
+            member_id = :producer_id", ['id' => $id, 'producer_id' => $producer_id]);
         return redirect('/listings');
     }
 }
