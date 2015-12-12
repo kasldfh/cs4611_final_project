@@ -41,6 +41,8 @@ Route::group(['middleware' => 'auth'], function() {
   // Authentication routes...
   Route::get('auth/logout', 'Auth\AuthController@getLogout');
 
+  Route::get('/reports', 'report_controller@create');
+
   Route::group(['middleware' => 'admin'], function() {
     Route::get('/admin', 'admin_controller@index');
     Route::get('/producer/create', 'producer_controller@create');
