@@ -5,6 +5,15 @@
     <link rel="stylesheet" href="/css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script src="/js/script.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script>
+        $(function() {
+        $( "#datepicker1" ).datepicker();
+        $( "#datepicker2" ).datepicker();
+        });
+    </script>
     @yield('style')
     @yield('js')
   </head>
