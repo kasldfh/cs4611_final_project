@@ -44,6 +44,7 @@
             <ul id="tabs" class="fl">
                 <li><a href="/admin" class="active-tab dashboard-tab">Dashboard</a></li>
                 <li><a href="/listings" class="purchase-tab">Selling</a></li>
+                <li><a href="/create" class="supplier-tab">Create Listing</a></li>
                 <li><a href="/reserved" class="sales-tab">Buying</a></li>
                 <li><a href="/listing" class=" stock-tab">Store</a></li>
                 <li><a href="view_report.php" class="report-tab">Reports</a></li>

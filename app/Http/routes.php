@@ -49,6 +49,9 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('/producer/store', 'producer_controller@store');
     Route::get('/producer/manage', 'producer_controller@manage');
     Route::get('/producer/delete/{id}', 'producer_controller@destroy');
+
+    Route::get('product_type/create', 'product_type_controller@create');
+    Route::post('product_type/store', 'product_type_controller@store');
   });
 });
 
