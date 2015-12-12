@@ -22,9 +22,9 @@ class report_controller extends Controller
 	$lowDate = Input::get('start_date');
 	$highDate = Input::get('end_date');
         if (Input::has('all')) {
-              $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = $user"));
+              $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user"), ['user'=>$user]);
          } else {
-              $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = $user AND p.post_date BETWEEN $lowDate AND $highDate"));
+              $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.post_date BETWEEN :lowDate AND :highDate"), ['user'=>$user, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);
          }
          return $result;
     }
@@ -39,9 +39,9 @@ class report_controller extends Controller
         $lowDate = Input::get('start_date');
         $highDate = Input::get('end_date');
         if (Input::has('all')) {
-            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = $user AND r.order_date BETWEEN $lowDate AND $highDate"));
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user"), ['user'=>$user]);  
         } else {
-            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = $user"));		
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user AND r.order_date BETWEEN :lowDate AND :highDate"), ['user'=>$user, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);
         }
         return $result;
     }
@@ -57,9 +57,9 @@ class report_controller extends Controller
         $lowDate = Input::get('start_date');
         $highDate = Input::get('end_date');
         if (Input::has('all')) {
-            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = $user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id AND p.post_date BETWEEN $lowDate AND $highDate"));
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id"), ['user'=>$user]);
         } else {
-            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = $user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id"));		
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id AND p.post_date BETWEEN :lowDate AND :highDate"), ['user'=>$user, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);   		
         }
         return $result;
     }
@@ -83,9 +83,23 @@ class report_controller extends Controller
      */
     public function create()
     {
+
+        $report_title
+        $data;
+        if (Input::has('sell')) {
+            $data = fetch_buyers();
+            $report_title = 'Selling';
+        } else if (Input::has('buy')) {
+            $data = fetch_reservations();
+            $report_title = 'Buying';
+        } else {
+            $data = fetch_products();
+            $report_title = 'Product';
+        }
+
         echo "<html>" . "<head>" . "<title>Product Report</title>"
             . "<link rel=\"stylesheet\" href=\"/report.css\">" . "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" . "</head>"
-            . "<body>" . "<div><img src=\"/posnic.png\" alt=\"cooperative\" style=\"width:152px;height:152;\" align=\"middle\"><h1>Product Report</h1></div>" . "<div>" . "<table border='4' class='stats' cellspacing='0'>
+            . "<body>" . "<div><img src=\"/posnic.png\" alt=\"cooperative\" style=\"width:152px;height:152;\" align=\"middle\"><h1>" . $report_title . " Report</h1></div>" . "<div>" . "<table border='4' class='stats' cellspacing='0'>
             <tr>
             <td class='hed' colspan='8'>Product Report</td>
               </tr>
@@ -100,14 +114,6 @@ class report_controller extends Controller
             <th>Total Quantity</th>
             <th>Product Type</th>
             </tr>";
-            $data;
-            if (Input::has('sell')) {
-            	$data = fetch_buyers();
-            } else if (Input::has('buy')) {
-            	$data = fetch_reservations();
-            } else {
-            	$data = fetch_products();
-            }
             foreach ($data->fetch_assoc() as $value) {
             	echo "<tr>";
             	if (Input::has('products')) {
