@@ -84,14 +84,15 @@ class report_controller extends Controller
     public function create()
     {
 
-        $report_title
+        $report_title = 'Product';
+        if (Input::has('title')) {
+            $report_title = Input::get('title');
+        }
         $data;
-        if (Input::has('sell')) {
+        if (strtolower($report_title) == 'selling') {
             $data = fetch_buyers();
-            $report_title = 'Selling';
-        } else if (Input::has('buy')) {
+        } else if (strtolower($report_title) == 'buying') {
             $data = fetch_reservations();
-            $report_title = 'Buying';
         } else {
             $data = fetch_products();
             $report_title = 'Product';
@@ -114,7 +115,7 @@ class report_controller extends Controller
             <th>Total Quantity</th>
             <th>Product Type</th>
             </tr>";
-            foreach ($data->fetch_assoc() as $value) {
+            foreach ($data as $value) {
             	echo "<tr>";
             	if (Input::has('products')) {
             		echo "<td>" . $value["name"] . "</td>";
