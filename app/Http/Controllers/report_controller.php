@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Input;
 use Auth;
 use DB;
+use Carbon\Carbon
 
 class report_controller extends Controller
 {
@@ -113,7 +114,11 @@ class report_controller extends Controller
 
         echo "<html>" . "<head>" . "<title>Product Report</title>"
             . "<link rel=\"stylesheet\" href=\"/report.css\">" . "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" . "</head>"
-            . "<body>" . "<div><img src=\"/upload/posnic.png\" alt=\"cooperative\" style=\"width:152px;height:152;\" align=\"middle\"><h1>" . $report_title . " Report</h1></div>" . "<div>" . "<table border='4' class='stats center' cellspacing='0'>";
+            . "<body>";
+            $info = Auth::user();
+            $user_info = DB::select( DB::raw("SELECT name, email, phone FROM Producer WHERE producer_id = :user"), ['user'=>$info->producer_id]); 
+            echo "<div style = \"infocorner\"><h6>" . $user_info->name . "</h6><h6>" . $user_info->email . "</h6><h6>" . $user_info->phone . "</h6><h6>" . Carbon::now() . "</h6></div>";
+            echo "<div><img src=\"/upload/posnic.png\" alt=\"cooperative\" style=\"width:152px;height:152;\" align=\"middle\"><h1>" . $report_title . " Report</h1></div>" . "<div>" . "<table border='4' class='stats center' cellspacing='0'>";
             if ($report_title != "Product") {
             	echo "<th>Producer Name</th>";
             }
