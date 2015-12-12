@@ -33,9 +33,15 @@ Route::group(['middleware' => 'auth'], function() {
 
   Route::post('/list', 'listing_controller@store');
 
+  //routes to see orders
+  Route::get('/orders', 'order_controller@index');
+  Route::get('/orders/{id}', 'order_controller@show');
+
   //routes for reservations
   Route::post('/reserve', 'reserve_controller@create');
   Route::post('/reserve/cancel/{id}', 'reserve_controller@destroy');
+
+  Route::get('/producer/edit/{id}', 'producer_controller@edit');
 
 
   // Authentication routes...
