@@ -110,7 +110,7 @@ class report_controller extends Controller
             <td class='hed' colspan='8'>Product Report</td>
               </tr>
             <tr>";
-            if ($report_title == "Product") {
+            if ($report_title != "Product") {
             	echo "<th>Producer Name</th>";
             }
             echo "<th>Day Produced</th>
