@@ -23,10 +23,10 @@ class listing_controller extends Controller
     {
       $listings;
       if(Input::has('sort')) {
-        $listings = DB::select( DB::raw("SELECT p.name as producer_name, p.city, p.state, s.batch_id, s.product_id, s.day_produced, s.quantity, s.price, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE p.member_id = s.member_id AND s.product_type_id = t.type_id AND lower(t.type_name) = lower(:type_value)"), ['type_value' => Input::get('sort'), ]);
+        $listings = DB::select( DB::raw("SELECT p.name as producer_name, p.city, p.state, p.batch_id, s.product_id, s.day_produced, s.quantity, s.price, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE p.member_id = s.member_id AND s.product_type_id = t.type_id AND lower(t.type_name) = lower(:type_value)"), ['type_value' => Input::get('sort'), ]);
       }
       else {
-        $listings = DB::select( DB::raw( "SELECT p.name as producer_name, p.city, p.state, s.batch_id, s.product_id, s.day_produced, s.quantity, s.price, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE p.member_id = s.member_id AND s.product_type_id = t.type_id"
+        $listings = DB::select( DB::raw( "SELECT p.name as producer_name, p.city, p.state, p.batch_id, s.product_id, s.day_produced, s.quantity, s.price, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE p.member_id = s.member_id AND s.product_type_id = t.type_id"
         ));
       }
         return View::make('listing.index', compact('listings'));
@@ -61,7 +61,7 @@ class listing_controller extends Controller
       $price = Input::get('price');
       $batch = Input::get('batch_id');
 
-      DB::statement("INSERT INTO Product (post_date, day_produced, member_id, quantity, use_by, product_type_id, price, batch_id) VALUES (\"?\", \"?\", ?, ?, \"?\", ?, ?, \"?\")", [$post, $date, $producer, $quantity, $useby, $type, $price, $batch]);
+      DB::statement("INSERT INTO Product (post_date, day_produced, member_id, quantity, use_by, product_type_id, price, batch_id) VALUES (\":post\", \":pdate\", :producer, :quantity, \":useby\", :type, :price, \":batch\")", ['post'=>$post, 'pdate'=>$date, 'producer'=>$producer, 'quantity'=>$quantity, 'useby'=>$useby, 'type'=>$type, 'price'=>$price, 'batch'=>$batch]);
       return redirect('/');
 
 
@@ -76,7 +76,7 @@ class listing_controller extends Controller
      */
     public function show($id)
     {
-      $listing = DB::select( DB::raw("SELECT p.name, p.city, p.state, s.product_id, s.day_produced, s.quantity, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, s.batch_id, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE s.product_type_id = t.type_id AND p.member_id = s.member_id AND s.product_id = :selection"), ['selection' => $id, ])[0];
+      $listing = DB::select( DB::raw("SELECT p.name, p.city, p.state, s.product_id, s.day_produced, s.quantity, s.quantity - (SELECT SUM(x.quantity) FROM Reserve x WHERE x.product_id = s.product_id) as quantity_available, s.use_by, p.batch_id, t.type_name as product_type FROM Producer p, Product s, Product_type t WHERE s.product_type_id = t.type_id AND p.member_id = s.member_id AND s.product_id = :selection"), ['selection' => $id, ])[0];
       return View::make('listing.show', compact('listing'));
     }
 
@@ -106,7 +106,7 @@ class listing_controller extends Controller
         $use_by = $request->useby;
         $type = $request->product_type;
         $producer_id = Auth::user()->producer_id;
-        DB::statement("UPDATE Product SET use_by = \":use\", quantity = :quantity , product_type_id = :type WHERE member_id = :producer_id AND product_id = :id", ['use' => $use_by, 'quantity' => $quantity, 'type' => $type, 'producer_id' => $producer_id, 'id' => $id]);
+        DB::statement("UPDATE Product SET use_by = \":use\", quantity = :quantity , product_type_id = p_type WHERE member_id = :pid AND product_id = :uct", ['use'=>$use_by, 'quantity'=>$quantity, 'p_type'=>$type, 'pid'=>$producer_id, 'uct'=>$id]);
         return redirect('/listings');
     }
 
@@ -119,8 +119,8 @@ class listing_controller extends Controller
     public function destroy($id)
     {
         $producer_id = Auth::user()->producer_id;
-        DB::statement("DELETE FROM Product WHERE product_id = :id AND
-            member_id = :producer_id", ['id' => $id, 'producer_id' => $producer_id]);
+        $stmt = statement("DELETE FROM Product WHERE product_id = :id AND 
+            member_id = :pid", ['id'=>$id, 'pid'=>$producer_id]);
         return redirect('/listings');
     }
 }
