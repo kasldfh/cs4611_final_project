@@ -20,16 +20,13 @@ class report_controller extends Controller
      *
      * @return query result
      */
-    public function fetch_products($dates = false) {
+    public function fetch_products($dates = false, $lowDate, $highDate) {
         $user = Auth::user();
         $result;
-	$lowDate = Input::get('start_date');
-	$highDate = Input::get('end_date');
         if (!$dates) {
-        //$result = DB::select(DB::raw("SELECT Product.product_id, Product.quantity, Product.price, Product.day_produced, Product.use_by, Product.batch_id, Product_type.type_name as product_type FROM Product, Product_type WHERE member_id = :producer_id AND Product.product_type_id = Product_type.type_id"), ['producer_id' => $user->producer_id]);
-        $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user"), ['user'=>$user->producer_id]);
+            $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user"), ['user'=>$user->producer_id]);
          } else {
-              $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.post_date BETWEEN :lowDate AND :highDate"), ['user'=>$user, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);
+            $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.post_date BETWEEN :lowDate AND :highDate"), ['user'=>$user->producer_id, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);
          }
          return $result;
     }
@@ -38,15 +35,13 @@ class report_controller extends Controller
      *
      * @return query result
      */
-    public function fetch_buyers() {
+    public function fetch_buyers($dates = false, $lowDate, $highDate) {
         $user = Auth::user();
         $result;
-        $lowDate = Input::get('start_date');
-        $highDate = Input::get('end_date');
-        if (Input::has('all')) {
-            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user"), ['user'=>$user]);  
+        if (!$dates) {
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user"), ['user'=>$user->producer_id]);  
         } else {
-            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user AND r.order_date BETWEEN :lowDate AND :highDate"), ['user'=>$user, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user AND r.order_date BETWEEN :lowDate AND :highDate"), ['user'=>$user->producer_id, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);
         }
         return $result;
     }
@@ -56,15 +51,13 @@ class report_controller extends Controller
      *
      * @return query result
      */
-    public function fetch_reservations() {
+    public function fetch_reservations($dates = false, $lowDate, $highDate) {
         $user = Auth::user();
         $result;
-        $lowDate = Input::get('start_date');
-        $highDate = Input::get('end_date');
-        if (Input::has('all')) {
-            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id"), ['user'=>$user]);
+        if (!$dates) {
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id"), ['user'=>$user->producer_id]);
         } else {
-            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id AND p.post_date BETWEEN :lowDate AND :highDate"), ['user'=>$user, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);   		
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id AND p.post_date BETWEEN :lowDate AND :highDate"), ['user'=>$user->producer_id, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);   		
         }
         return $result;
     }
@@ -90,17 +83,32 @@ class report_controller extends Controller
     {
 
         $report_title = 'Product';
+
+
+        
+        $data;
         if (Input::has('title')) {
             $report_title = Input::get('title');
         }
-        $data;
+        if (Input::has('end_date') && Input::has('start_date')) {
+            $bDate = Input::get('start_date');
+            $eDate = Input::get('end_date');
+
+            if (strtolower($report_title) == 'selling') {
+                $data = $this->fetch_buyers(true, $bDate, $eDate);
+            } else if (strtolower($report_title) == 'buying') {
+                $data = $this->fetch_reservations(true, $bDate, $eDate);
+            } else {
+                $data = $this->fetch_products(true, $bDate, $eDate);
+            }
+        }
+        
         if (strtolower($report_title) == 'selling') {
             $data = $this->fetch_buyers();
         } else if (strtolower($report_title) == 'buying') {
             $data = $this->fetch_reservations();
         } else {
             $data = $this->fetch_products();
-            $report_title = 'Product';
         }
 
         echo "<html>" . "<head>" . "<title>Product Report</title>"
