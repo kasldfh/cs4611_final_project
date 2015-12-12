@@ -1,0 +1,12 @@
+Todo:
+2 - need to be able to add producers/members
+20m - need to be able to add product types
+20m - need to be able to edit producers (producers can self edit, admins can edit them
+as well)
+20m - need to be able to change password
+20m - view orders in a table instead of nowhere
+1h -  send email on reserve confirmation
+0m - integrate location (lol) \o/
+1h - reports landing page
+1h - functional reports
+
