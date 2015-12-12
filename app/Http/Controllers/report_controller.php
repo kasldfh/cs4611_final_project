@@ -20,7 +20,7 @@ class report_controller extends Controller
      *
      * @return query result
      */
-    public function fetch_products($dates = false, $lowDate, $highDate) {
+    public function fetch_products($dates = false, $lowDate = false, $highDate = false) {
         $user = Auth::user();
         $result;
         if (!$dates) {
@@ -35,7 +35,7 @@ class report_controller extends Controller
      *
      * @return query result
      */
-    public function fetch_buyers($dates = false, $lowDate, $highDate) {
+    public function fetch_buyers($dates = false, $lowDate = false, $highDate = false) {
         $user = Auth::user();
         $result;
         if (!$dates) {
@@ -51,7 +51,7 @@ class report_controller extends Controller
      *
      * @return query result
      */
-    public function fetch_reservations($dates = false, $lowDate, $highDate) {
+    public function fetch_reservations($dates = false, $lowDate = false, $highDate = false) {
         $user = Auth::user();
         $result;
         if (!$dates) {
@@ -101,14 +101,14 @@ class report_controller extends Controller
             } else {
                 $data = $this->fetch_products(true, $bDate, $eDate);
             }
-        }
-        
-        if (strtolower($report_title) == 'selling') {
-            $data = $this->fetch_buyers();
-        } else if (strtolower($report_title) == 'buying') {
-            $data = $this->fetch_reservations();
         } else {
-            $data = $this->fetch_products();
+            if (strtolower($report_title) == 'selling') {
+                $data = $this->fetch_buyers();
+            } else if (strtolower($report_title) == 'buying') {
+                $data = $this->fetch_reservations();
+            } else {
+                $data = $this->fetch_products();
+            }
         }
 
         echo "<html>" . "<head>" . "<title>Product Report</title>"
