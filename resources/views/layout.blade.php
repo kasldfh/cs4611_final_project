@@ -47,7 +47,7 @@
                 <li><a href="/create" class="supplier-tab">Create Listing</a></li>
                 <li><a href="/reserved" class="sales-tab">Buying</a></li>
                 <li><a href="/listing" class=" stock-tab">Store</a></li>
-                <li><a href="view_report.php" class="report-tab">Reports</a></li>
+                <li><a href="/reports" class="report-tab">Reports</a></li>
             </ul>
             <!-- end tabs -->
     
