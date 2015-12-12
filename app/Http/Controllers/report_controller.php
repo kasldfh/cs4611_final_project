@@ -105,11 +105,7 @@ class report_controller extends Controller
 
         echo "<html>" . "<head>" . "<title>Product Report</title>"
             . "<link rel=\"stylesheet\" href=\"/report.css\">" . "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" . "</head>"
-            . "<body>" . "<div><img src=\"/upload/posnic.png\" alt=\"cooperative\" style=\"width:152px;height:152;\" align=\"middle\"><h1>" . $report_title . " Report</h1></div>" . "<div>" . "<table border='4' class='stats' cellspacing='0'>
-            <tr>
-            <td class='hed' colspan='8'>Product Report</td>
-              </tr>
-            <tr>";
+            . "<body>" . "<div><img src=\"/upload/posnic.png\" alt=\"cooperative\" style=\"width:152px;height:152;\" align=\"middle\"><h1>" . $report_title . " Report</h1></div>" . "<div>" . "<table border='4' class='stats center' cellspacing='0'>";
             if ($report_title != "Product") {
             	echo "<th>Producer Name</th>";
             }
