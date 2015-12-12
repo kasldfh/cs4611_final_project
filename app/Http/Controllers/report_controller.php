@@ -26,8 +26,8 @@ class report_controller extends Controller
 	$lowDate = Input::get('start_date');
 	$highDate = Input::get('end_date');
         if (!$dates) {
-        $result = DB::select(DB::raw("SELECT Product.product_id, Product.quantity, Product.price, Product.day_produced, Product.use_by, Product.batch_id, Product_type.type_name as product_type FROM Product, Product_type WHERE member_id = :producer_id AND Product.product_type_id = Product_type.type_id"), ['producer_id' => $user->producer_id]);
-              //$result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user"), ['user'=>$user]);
+        //$result = DB::select(DB::raw("SELECT Product.product_id, Product.quantity, Product.price, Product.day_produced, Product.use_by, Product.batch_id, Product_type.type_name as product_type FROM Product, Product_type WHERE member_id = :producer_id AND Product.product_type_id = Product_type.type_id"), ['producer_id' => $user->producer_id]);
+        $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user"), ['user'=>$user->producer_id]);
          } else {
               $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.post_date BETWEEN :lowDate AND :highDate"), ['user'=>$user, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);
          }
