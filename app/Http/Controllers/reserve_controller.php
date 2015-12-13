@@ -37,7 +37,7 @@ class reserve_controller extends Controller
       $quantity = Input::get('quantity');
       //TODO: rename sent, get current date
       $order_date = Carbon::now();
-      $available = DB::statement("SELECT SUM(x.quantity) as available FROM Reserve x WHERE x.product_id = :pid", ['pid'=>$product_id])[0]->available;
+      $available = DB::select(DB::raw("SELECT Product.quantity - SUM(x.quantity) as available FROM Reserve x, Product WHERE x.product_id = :pid and Product.product_id = :pd"), ['pid'=>$product_id, 'pd' => $product_id])[0]->available;
 
       if (0 <= ($available - $quantity)) {
       	DB::statement( "INSERT INTO Reserve (product_id, reciever_id, quantity, order_date) VALUES(:p_id, :r_id, :quantity, :date)", ['p_id' => $product_id, 'r_id' => $reserved_by, 'quantity' => $quantity, 'date' => $order_date]);
