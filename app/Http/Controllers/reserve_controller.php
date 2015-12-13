@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use DB;
 use Auth;
 use View;
+use Mail;
 
 class reserve_controller extends Controller
 {
@@ -38,7 +39,26 @@ class reserve_controller extends Controller
       $order_date = Carbon::now();
 
       DB::statement( "INSERT INTO Reserve (product_id, reciever_id, quantity, order_date) VALUES(:p_id, :r_id, :quantity, :date)", ['p_id' => $product_id, 'r_id' => $reserved_by, 'quantity' => $quantity, 'date' => $order_date]);
-      return View::make('reservation.created');
+
+
+      //now we send the email 
+      Mail::send('email.product_reserved', [], function($m) {
+        $m->from("tribessyrup@gmail.com");
+      $producer = DB::select(DB::raw("select Producer.email from Reserve, Product, Producer where Reserve.product_id = Product.product_id and Product.member_id = Producer.member_id and Reserve.reserve_id = LAST_INSERT_ID()"))[0]->email;
+
+        $m->to($producer);
+        $m->subject("A product was reserved!");
+      });
+
+      //now we send the email 
+      Mail::send('email.reservation_created', [], function($m) {
+        $m->from("tribessyrup@gmail.com");
+        $receiver = DB::select(DB::raw("select email from Producer where member_id = :id"), ['id'=>Auth::user()->producer_id])[0]->email;
+
+        $m->to($receiver);
+        $m->subject("Reservation success!");
+      });
+      return redirect('/listing');
     }
 
     /**
