@@ -54,6 +54,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/admin', 'admin_controller@index');
     Route::get('/producer/create', 'producer_controller@create');
     Route::post('/producer/store', 'producer_controller@store');
+    Route::post('/producer/update/{id}', 'producer_controller@update');
     Route::get('/producer/manage', 'producer_controller@manage');
     Route::get('/producer/delete/{id}', 'producer_controller@destroy');
 

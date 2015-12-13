@@ -31,7 +31,7 @@
     						<li><a href="change_password.php">Change Password</a></li>
     					</ul> 
     				</li>
-    			<li><a href="update_details.php" class="round button dark menu-settings image-left">Update Store Details</a></li>
+    			<li><a href="/producer/edit/{!!Auth::user()->producer_id!!}" class="round button dark menu-settings image-left">Update Store Details</a></li>
     				<li><a href="/auth/logout" class="round button dark menu-logoff image-left">Log out</a></li>
     				
     			</ul> <!-- end nav -->

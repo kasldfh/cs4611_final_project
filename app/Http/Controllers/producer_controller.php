@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Auth;
 use View;
 use DB;
+use Input;
 
 class producer_controller extends Controller
 {
@@ -54,7 +55,7 @@ class producer_controller extends Controller
      */
     public function create()
     {
-        //
+        return View::make('producer.create');
     }
 
     /**
@@ -65,7 +66,7 @@ class producer_controller extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::statement("INSERT INTO Producer (member_id, name, phone_number, street, city, state, email) VALUES (:id, :name, :phone, :street,:city, :state, :email)", ['id'=>Input::get('member_id'), 'name'=> Input::get('name'), 'phone'=> Input::get('phone_number'), 'street'=>Input::get('street'),'city'=>Input::get('city'), 'state'=>Input::get('state'), 'email'=>Input::get('email')]);
     }
 
     /**
@@ -87,7 +88,8 @@ class producer_controller extends Controller
      */
     public function edit($id)
     {
-        return View::make('producer.update');
+        $producer = DB::select(DB::raw("select * from Producer where member_id = :id"), ['id' => $id])[0];
+        return View::make('producer.update', compact('producer'));
     }
 
     /**
@@ -99,7 +101,7 @@ class producer_controller extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        DB::statement("UPDATE Producer SET name = :name, phone_number = :phone, street = :street, city = :city, state = :state, email = :email WHERE member_id = :id", ['id'=>Input::get('member_id'), 'name'=> Input::get('name'), 'phone'=> Input::get('phone_number'), 'street'=>Input::get('street'),'city'=>Input::get('city'), 'state'=>Input::get('state'), 'email'=>Input::get('email')]);
     }
 
     /**
