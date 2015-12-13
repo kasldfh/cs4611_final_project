@@ -25,11 +25,11 @@ Route::group(['middleware' => 'auth'], function() {
   Route::post('/listing/update/{id}', 'listing_controller@update');
 
   //route to see what listings this producer has
-  Route::get('listings', 'producer_controller@view_available');
+  Route::get('/listings', 'producer_controller@view_available');
 
-  Route::get('reserved', 'producer_controller@view_reserved');
+  Route::get('/reserved', 'producer_controller@view_reserved');
 
-  Route::get('create', 'listing_controller@create');
+  Route::get('/create', 'listing_controller@create');
 
   Route::post('/list', 'listing_controller@store');
 
@@ -47,7 +47,8 @@ Route::group(['middleware' => 'auth'], function() {
   // Authentication routes...
   Route::get('auth/logout', 'Auth\AuthController@getLogout');
 
-  Route::get('/reports', 'report_controller@create');
+  Route::get('/reports', 'report_controller@index');
+  Route::get('/report', 'report_controller@create');
 
   Route::group(['middleware' => 'admin'], function() {
     Route::get('/admin', 'admin_controller@index');

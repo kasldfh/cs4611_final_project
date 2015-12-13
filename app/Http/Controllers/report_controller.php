@@ -11,6 +11,7 @@ use Input;
 use Auth;
 use DB;
 use Carbon\Carbon;
+use View;
 
 class report_controller extends Controller
 {
@@ -40,7 +41,7 @@ class report_controller extends Controller
         $user = Auth::user();
         $result;
         if (!$dates) {
-            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user ORDER BY r.day_produced"), ['user'=>$user->producer_id]);  
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user ORDER BY p.day_produced"), ['user'=>$user->producer_id]);  
         } else {
             $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user AND r.order_date BETWEEN :lowDate AND :highDate ORDER BY r.day_produced"), ['user'=>$user->producer_id, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);
         }
@@ -72,6 +73,7 @@ class report_controller extends Controller
      */
     public function index()
     {
+        return View::make('reports.index');
         //
     }
 
