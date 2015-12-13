@@ -37,14 +37,15 @@ class reserve_controller extends Controller
       $quantity = Input::get('quantity');
       //TODO: rename sent, get current date
       $order_date = Carbon::now();
+      $available = DB::statement("SELECT SUM(x.quantity) as available FROM Reserve x WHERE x.product_id = :pid", ['pid'=>$product_id])[0]->available;
 
-      DB::statement( "INSERT INTO Reserve (product_id, reciever_id, quantity, order_date) VALUES(:p_id, :r_id, :quantity, :date)", ['p_id' => $product_id, 'r_id' => $reserved_by, 'quantity' => $quantity, 'date' => $order_date]);
-
-
-      //now we send the email 
+      if (0 <= ($available - $quantity)) {
+      	DB::statement( "INSERT INTO Reserve (product_id, reciever_id, quantity, order_date) VALUES(:p_id, :r_id, :quantity, :date)", ['p_id' => $product_id, 'r_id' => $reserved_by, 'quantity' => $quantity, 'date' => $order_date]);
+      
+      	//now we send the email 
       Mail::send('email.product_reserved', [], function($m) {
         $m->from("tribessyrup@gmail.com");
-      $producer = DB::select(DB::raw("select Producer.email from Reserve, Product, Producer where Reserve.product_id = Product.product_id and Product.member_id = Producer.member_id and Reserve.reserve_id = LAST_INSERT_ID()"))[0]->email;
+      	$producer = DB::select(DB::raw("select Producer.email from Reserve, Product, Producer where Reserve.product_id = Product.product_id and Product.member_id = Producer.member_id and Reserve.reserve_id = LAST_INSERT_ID()"))[0]->email;
 
         $m->to($producer);
         $m->subject("A product was reserved!");
@@ -58,7 +59,15 @@ class reserve_controller extends Controller
         $m->to($receiver);
         $m->subject("Reservation success!");
       });
+
       return redirect('/listing');
+
+      } else {
+      	return "<h1>Error: Cannot reserve over the available quantity!</h1>";
+      }
+
+      
+      
     }
 
     /**
