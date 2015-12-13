@@ -28,7 +28,7 @@
     	
     				<li class="v-sep"><a href="#" class="round button dark menu-user image-left">Logged in as <strong><?php echo Auth::user()->name?></strong></a>
     					<ul>
-    						<li><a href="change_password.php">Change Password</a></li>
+    						<li><a href="/auth/reset">Change Password</a></li>
     					</ul> 
     				</li>
     			<li><a href="/producer/edit/{!!Auth::user()->producer_id!!}" class="round button dark menu-settings image-left">Update Store Details</a></li>

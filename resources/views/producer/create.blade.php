@@ -51,7 +51,7 @@
                         <input type="text" name="state" class="round full-width-input" autofocus/>
                     </p></td>
                 <td>
-                    &nbsp;
+                    <input type="checkbox" name="admin" value="true">Admin 
                 </td>
             </tr>
             <tr></tr>

@@ -46,6 +46,8 @@ Route::group(['middleware' => 'auth'], function() {
 
   // Authentication routes...
   Route::get('auth/logout', 'Auth\AuthController@getLogout');
+  Route::get('auth/reset', 'reset_controller@create');
+  Route::post('auth/reset/{id}', 'reset_controller@store');
 
   Route::get('/reports', 'report_controller@index');
   Route::get('/report', 'report_controller@create');

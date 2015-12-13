@@ -7,10 +7,14 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\User;
+use Hash;
+
 use Auth;
 use View;
 use DB;
 use Input;
+use Mail;
 
 class producer_controller extends Controller
 {
@@ -66,7 +70,36 @@ class producer_controller extends Controller
      */
     public function store(Request $request)
     {
+        $name = Input::get('name');
+        $member_id = Input::get('member_id');
+        $phone = Input::get('phone_number');
+        $street = Input::get('street');
+        $city = Input::get('city');
+        $state = Input::get('state');
+        $email = Input::get('email');
+        $admin = Input::get('admin');
         DB::statement("INSERT INTO Producer (member_id, name, phone_number, street, city, state, email) VALUES (:id, :name, :phone, :street,:city, :state, :email)", ['id'=>Input::get('member_id'), 'name'=> Input::get('name'), 'phone'=> Input::get('phone_number'), 'street'=>Input::get('street'),'city'=>Input::get('city'), 'state'=>Input::get('state'), 'email'=>Input::get('email')]);
+
+        //create a user with random password
+        $u = new User;
+        $u->name = $name;
+        $u->email = $email;
+        if($admin)
+            $u->admin = true;
+        $u->producer_id = $member_id;
+        $pw = str_random(60);
+        $u->password = Hash::make($pw);
+        $u->save();
+
+        //email that user with password
+        Mail::send('email.account_created', compact('pw'), function($m) use ($email){
+            $m->from("tribessyrup@gmail.com");
+            $m->to($email);
+            $m->subject("Account Created");
+        });
+
+        return redirect('/');
+
     }
 
     /**
