@@ -160,8 +160,8 @@ class report_controller extends Controller
             . "<link rel=\"stylesheet\" href=\"/report.css\">" . "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" . "</head>"
             . "<body>";
             $info = Auth::user();
-            $user_info = DB::select( DB::raw("SELECT name, email, phone_number FROM Producer WHERE member_id = :user"), ['user'=>$info->producer_id])[0];
-            echo "<div class = \"infocorner\"><h4>" . $user_info->name . "<br>" . $user_info->email . "<br>" . $user_info->phone_number . "<br>" . Carbon::now() . "</h4></div>";
+            $user_info = DB::select( DB::raw("SELECT name, email, phone_number, city, state, street FROM Producer WHERE member_id = :user"), ['user'=>$info->producer_id])[0];
+            echo "<div class = \"infocorner\"><h4>" . $user_info->name . "<br>" . $user_info->email . "<br>" . $user_info->phone_number . "<br>" . Carbon::now() . "<br>" . $user_info->street . "<br>" . $user_info->city . ", " . $user_info->state . "</h4></div>";
             echo "<div><img src=\"/upload/posnic.png\" alt=\"cooperative\" style=\"width:152px;height:152;\" align=\"middle\"><h1>" . $report_title . " Report</h1></div>" . "<div>" . "<table border='4' class='stats center' cellspacing='0'>";
             if ($report_title != "Product") {
             	echo "<th>Producer Name</th>";
