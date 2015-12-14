@@ -28,3 +28,11 @@ img {
 td {
    text-align: center;
 }
+
+.infocorner {
+   position: absolute;
+   top: 0px;
+   right: 0px;
+   display: inline-block;
+   
+}

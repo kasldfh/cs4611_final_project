@@ -22,13 +22,21 @@ class report_controller extends Controller
      *
      * @return query result
      */
-    public function fetch_products($dates = false, $lowDate = false, $highDate = false) {
+    public function fetch_products($dates = false, $lowDate = false, $highDate = false, $batch = false) {
         $user = Auth::user();
         $result;
         if (!$dates) {
-            $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user ORDER BY p.day_produced"), ['user'=>$user->producer_id]);
+        	if (!$batch) {
+        		$result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user ORDER BY p.day_produced"), ['user'=>$user->producer_id]);
+        	} else {
+            	$result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.batch_id = :b ORDER BY p.day_produced"), ['user'=>$user->producer_id, 'b'=>$batch]);
+            }
          } else {
-            $result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.post_date BETWEEN :lowDate AND :highDate ORDER BY p.day_produced"), ['user'=>$user->producer_id, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);
+         	if (!$batch) {
+            	$result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.post_date BETWEEN :lowDate AND :highDate ORDER BY p.day_produced"), ['user'=>$user->producer_id, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);
+         	} else {
+            	$result = DB::select( DB::raw("SELECT p.day_produced, p.use_by, p.batch_id, p.price, p.quantity, t.type_name as product_type FROM Product p, Product_type t WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.batch_id = :b AND p.post_date BETWEEN :lowDate AND :highDate ORDER BY p.day_produced"), ['user'=>$user->producer_id, 'lowDate'=>$lowDate, 'highDate'=>$highDate, 'b'=>$batch]);
+        	}	
          }
          return $result;
     }
@@ -37,13 +45,21 @@ class report_controller extends Controller
      *
      * @return query result
      */
-    public function fetch_buyers($dates = false, $lowDate = false, $highDate = false) {
+    public function fetch_buyers($dates = false, $lowDate = false, $highDate = false, $batch = false) {
         $user = Auth::user();
         $result;
         if (!$dates) {
-            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user ORDER BY p.day_produced"), ['user'=>$user->producer_id]);  
+        	if(!$batch) {
+            	$result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user ORDER BY p.day_produced"), ['user'=>$user->producer_id]);
+        	} else {
+        		            	$result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user AND p.batch_id = :b ORDER BY p.day_produced"), ['user'=>$user->producer_id, 'b'=>$batch]);
+            }  
         } else {
-            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user AND r.order_date BETWEEN :lowDate AND :highDate ORDER BY r.day_produced"), ['user'=>$user->producer_id, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);
+        	if (!$batch) {
+            	$result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user AND r.order_date BETWEEN :lowDate AND :highDate ORDER BY r.day_produced"), ['user'=>$user->producer_id, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);
+        	} else {
+            	$result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Reserve r, Producer pr WHERE p.product_type_id = t.type_id AND r.product_id = p.product_id AND p.member_id = pr.member_id AND r.reciever_id = :user AND p.batch_id = :b AND r.order_date BETWEEN :lowDate AND :highDate ORDER BY r.day_produced"), ['user'=>$user->producer_id, 'lowDate'=>$lowDate, 'highDate'=>$highDate, 'b'=>$batch]);
+        	}
         }
         return $result;
     }
@@ -53,13 +69,21 @@ class report_controller extends Controller
      *
      * @return query result
      */
-    public function fetch_reservations($dates = false, $lowDate = false, $highDate = false) {
+    public function fetch_reservations($dates = false, $lowDate = false, $highDate = false, $batch = false) {
         $user = Auth::user();
         $result;
         if (!$dates) {
+        	if (!$batch) {
             $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id ORDER BY p.day_produced"), ['user'=>$user->producer_id]);
+        	} else {
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id AND p.batch_id = :b ORDER BY p.day_produced"), ['user'=>$user->producer_id, 'b'=>$batch]);
+        	}
         } else {
+        	if (!$batch) {
             $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id AND p.post_date BETWEEN :lowDate AND :highDate ORDER BY p.day_produced"), ['user'=>$user->producer_id, 'lowDate'=>$lowDate, 'highDate'=>$highDate]);   		
+        	} else {
+            $result = DB::select( DB::raw("SELECT pr.name, p.day_produced, p.use_by, p.batch_id, p.price, r.quantity, t.type_name as product_type FROM Product p, Product_type t, Producer pr, Reserve r WHERE p.product_type_id = t.type_id AND p.member_id = :user AND p.product_id = r.product_id AND r.reciever_id = pr.member_id AND p.batch_id = :b AND p.post_date BETWEEN :lowDate AND :highDate ORDER BY p.day_produced"), ['user'=>$user->producer_id, 'lowDate'=>$lowDate, 'highDate'=>$highDate, 'b'=>$batch]);
+        	}
         }
         return $result;
     }
@@ -84,34 +108,52 @@ class report_controller extends Controller
      */
     public function create()
     {
-
-        $report_title = 'Product';
-
-
-        
+        $report_title = 'Product';  
         $data;
+        $bat;
         if (Input::has('title')) {
             $report_title = Input::get('title');
         }
         if (Input::has('end_date') && Input::has('start_date')) {
             $bDate = Input::get('start_date');
             $eDate = Input::get('end_date');
-
-            if (strtolower($report_title) == 'selling') {
-                $data = $this->fetch_buyers(true, $bDate, $eDate);
-            } else if (strtolower($report_title) == 'buying') {
-                $data = $this->fetch_reservations(true, $bDate, $eDate);
+            if (Input::has('chosen_batch')) {
+            	$bat = Input::get('chosen_batch');
+            	if (strtolower($report_title) == 'selling') {
+                	$data = $this->fetch_buyers(true, $bDate, $eDate, $bat);
+            	} else if (strtolower($report_title) == 'buying') {
+                	$data = $this->fetch_reservations(true, $bDate, $eDate, $bat);
+            	} else {
+                	$data = $this->fetch_products(true, $bDate, $eDate, $bat);
+            	}
             } else {
-                $data = $this->fetch_products(true, $bDate, $eDate);
+            	if (strtolower($report_title) == 'selling') {
+                	$data = $this->fetch_buyers(true, $bDate, $eDate);
+            	} else if (strtolower($report_title) == 'buying') {
+                	$data = $this->fetch_reservations(true, $bDate, $eDate);
+            	} else {
+                	$data = $this->fetch_products(true, $bDate, $eDate);
+            	}
             }
         } else {
-            if (strtolower($report_title) == 'selling') {
-                $data = $this->fetch_buyers();
-            } else if (strtolower($report_title) == 'buying') {
-                $data = $this->fetch_reservations();
-            } else {
-                $data = $this->fetch_products();
-            }
+        	if (Input::has('chosen_batch')) {
+        		$bat = Input::get('chosen_batch');
+        		if (strtolower($report_title) == 'selling') {
+                	$data = $this->fetch_buyers(false, false, false, $bat);
+            	} else if (strtolower($report_title) == 'buying') {
+                	$data = $this->fetch_reservations(false, false, false, $bat);
+            	} else {
+                	$data = $this->fetch_products(false, false, false, $bat);
+            	}
+        	} else {
+        		if (strtolower($report_title) == 'selling') {
+                	$data = $this->fetch_buyers();
+            	} else if (strtolower($report_title) == 'buying') {
+                	$data = $this->fetch_reservations();
+            	} else {
+                	$data = $this->fetch_products();
+            	}
+        	} 
         }
 
         echo "<html>" . "<head>" . "<title>Product Report</title>"
