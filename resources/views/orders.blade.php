@@ -13,12 +13,13 @@
        <th>Quantity</th>
        <th>Order Date</th>
        <th>Customer Phone</th>
-       <th>Customer Address</th>
        <th>Customer Email</th>
+       <th>Customer Address</th>
        <th></th>
    </tr>
 <?php $i = 1;?>
   @foreach($orders as $order)
+  <?php $address = $order->street . " " . $order->city . " " . $order->state?>
     <tr>
       <td>{!!$i!!}</td> 
       <td>{!!$order->product_type!!}</td>
@@ -28,7 +29,7 @@
       <td>{!!$order->order_date!!}</td> 
       <td>{!!$order->phone_number!!}</td> 
       <td>{!!$order->email!!}</td> 
-      <td>{!!$order->street!!} {!!$order->city!!}, {!!$order->state!!}</td> 
+      <td><a href="transport?to={!!$address!!}">{!!$address!!}</a></td> 
     </tr>
     
     <?php $i++;?>

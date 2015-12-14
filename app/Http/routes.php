@@ -44,6 +44,11 @@ Route::group(['middleware' => 'auth'], function() {
   Route::get('/producer/edit/{id}', 'producer_controller@edit');
 
 
+  //route for transportation
+  Route::get('/transport', 'transport_controller@index');
+
+
+
   // Authentication routes...
   Route::get('auth/logout', 'Auth\AuthController@getLogout');
   Route::get('auth/reset', 'reset_controller@create');

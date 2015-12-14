@@ -19,6 +19,7 @@
    </tr>
 <?php $i = 1;?>
   @foreach($reservations as $reservation)
+  <?php $address = $reservation->street . " " . $reservation->city . " " . $reservation->state?>
     <tr>
       <td>{!!$i!!}</td> 
       <td>{!!$reservation->product_type!!}</td>
@@ -28,7 +29,7 @@
       <td>{!!$reservation->day_produced!!}</td> 
       <td>{!!$reservation->use_by!!}</td> 
       <td>{!!$reservation->producer_name!!}</td> 
-      <td>{!!$reservation->city!!}, {!!$reservation->state!!}</td> 
+      <td><a href="/transport?from="{!!$address!!}">{!!$reservation->city!!}, {!!$reservation->state!!}</a></td> 
       <td>{!!$reservation->order_date!!}</td> 
       <td>
         <form class="form" action="/reserve/cancel/{!!$reservation->reserve_id!!}" method="post">

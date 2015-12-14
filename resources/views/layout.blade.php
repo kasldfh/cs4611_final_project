@@ -4,9 +4,8 @@
     <title>@yield('title')</title>
     <link rel="stylesheet" href="/css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script src="/js/script.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script>
         $(function() {
@@ -14,8 +13,9 @@
         $( "#datepicker2" ).datepicker();
         });
     </script>
-    @yield('style')
+    <script src="/js/script.js"></script>
     @yield('js')
+    @yield('style')
   </head>
   <body>
     @if(Auth::user())
@@ -60,7 +60,9 @@
                 <li><a href="/reserved" class="<?php if(isset($nav) && $nav == "buying") echo "active-tab "?>sales-tab">Buying</a></li>
                 <li><a href="/listing" class="<?php if(isset($nav) && $nav == "store") echo "active-tab "?> stock-tab">Store</a></li>
                 <li><a href="/reports" class="<?php if(isset($nav) && $nav == "reports") echo "active-tab "?>report-tab">Reports</a></li>
-                <li><a href="/reports" class="<?php if(isset($nav) && $nav == "transportation") echo "active-tab "?>report-tab">Transportation</a></li>
+                @if($nav == "transport")
+                <li><a href="/" class="active-tab payment-tab">Transportation</a></li>
+                @endif
             </ul>
             <!-- end tabs -->
     
