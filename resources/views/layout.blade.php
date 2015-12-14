@@ -51,13 +51,16 @@
         <div class="page-full-width cf">
      
             <ul id="tabs" class="fl">
-                <li><a href="/admin" class="active-tab dashboard-tab">Dashboard</a></li>
-                <li><a href="/listings" class="purchase-tab">Selling</a></li>
-                <li><a href="/orders" class="supplier-tab">View Orders</a></li>
-                <li><a href="/create" class="supplier-tab">Create Listing</a></li>
-                <li><a href="/reserved" class="sales-tab">Buying</a></li>
-                <li><a href="/listing" class=" stock-tab">Store</a></li>
-                <li><a href="/reports" class="report-tab">Reports</a></li>
+            @if(Auth::user()->admin)
+            <li><a href="/admin" class="<?php if(isset($nav) && $nav == "dashboard") echo "active-tab "?> dashboard-tab">Dashboard</a></li>
+            @endif
+                <li><a href="/listings" class="<?php if(isset($nav) && $nav == "selling") echo "active-tab "?>purchase-tab">Selling</a></li>
+                <li><a href="/orders" class="<?php if(isset($nav) && $nav == "orders")  echo "active-tab "?>supplier-tab">View Orders</a></li>
+                <li><a href="/create" class="<?php if(isset($nav) && $nav == "create") echo "active-tab "?>supplier-tab">Create Listing</a></li>
+                <li><a href="/reserved" class="<?php if(isset($nav) && $nav == "buying") echo "active-tab "?>sales-tab">Buying</a></li>
+                <li><a href="/listing" class="<?php if(isset($nav) && $nav == "store") echo "active-tab "?> stock-tab">Store</a></li>
+                <li><a href="/reports" class="<?php if(isset($nav) && $nav == "reports") echo "active-tab "?>report-tab">Reports</a></li>
+                <li><a href="/reports" class="<?php if(isset($nav) && $nav == "transportation") echo "active-tab "?>report-tab">Transportation</a></li>
             </ul>
             <!-- end tabs -->
     

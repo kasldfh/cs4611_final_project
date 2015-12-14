@@ -1,4 +1,7 @@
 @extends('layout')
+@section('js')
+<?php $nav = "orders"?>
+@endsection
 @section('content')
 <h1>Orders {!!$header!!}</h1>
 <table>

@@ -1,4 +1,7 @@
 @extends('layout')
+@section('js')
+<?php $nav = "store"?>
+@endsection
 @section('content')
   <?php if(!$listing->quantity_available) {
       $listing->quantity_available = $listing->quantity;

@@ -1,4 +1,7 @@
 @extends('layout')
+@section('js')
+<?php $nav = "create"?>
+@endsection
 @section('content')
 <form class="form" action="/list" method="post">
 <input type="hidden" name="_token" value="{!!csrf_token()!!}">

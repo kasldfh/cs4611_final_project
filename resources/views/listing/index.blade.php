@@ -1,5 +1,8 @@
 @extends('layout')
 @section('js')
+<?php $nav = "store"?>
+@endsection
+@section('js')
   <script>
     function sortBy(key) {
       console.log("sortby called with key: " + key);

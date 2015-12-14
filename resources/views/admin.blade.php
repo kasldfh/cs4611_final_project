@@ -1,4 +1,7 @@
 @extends('layout')
+@section('js')
+<?php $nav = "dashboard"?>
+@endsection
 @section('content')
   <div class="side-menu fl">
 

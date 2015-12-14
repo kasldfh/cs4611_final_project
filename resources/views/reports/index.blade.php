@@ -1,4 +1,7 @@
 @extends('layout')
+@section('js')
+<?php $nav = "reports"?>
+@endsection
 @section('content')
 <p>Select the type of report you would like to generate:</p>
 <div class="panel">

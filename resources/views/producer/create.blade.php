@@ -1,4 +1,7 @@
 @extends('layout')
+@section('js')
+<?php $nav = "dashboard"?>
+@endsection
 @section('content')
     <form action="/producer/store" method="POST" class="cmxform" autocomplete="off">
         <input type="hidden" name="_token" value="{!!csrf_token()!!}">

@@ -1,5 +1,8 @@
 @extends('layout')
 @section('js')
+<?php $nav = "dashboard"?>
+@endsection
+@section('js')
   <script LANGUAGE="JavaScript">
       <!--
       // Nannette Thacker http://www.shiningstar.net

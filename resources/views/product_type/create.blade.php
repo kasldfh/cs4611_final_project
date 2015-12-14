@@ -1,4 +1,7 @@
 @extends('layout')
+@section('js')
+<?php $nav = "dashboard"?>
+@endsection
 @section('content')
   <h1>Create a new product type</h1>
   <form method="post" action="/product_type/store">

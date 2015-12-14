@@ -1,4 +1,7 @@
 @extends('layout')
+@section('js')
+<?php $nav = "selling"?>
+@endsection
 @section('content')
 <table>
    <tr>
