@@ -1,27 +1,37 @@
-## Laravel PHP Framework
+## Tribal Syrup Website
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+This is a website created by Maz Jindeel and Kris Samuelson for the Tribal Syrup Cooperative. 
+It uses the laravel php framework. Due to varying levels of experience with Laravel's models in our group,
+Models are not widely used in ths application. We instead have used raw sql for most purposes.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+## Setup
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+###Local Machine Setup
+For a local machine, it is recommended that you install the Homestead environment so you can have a development environment where everything works. You can learn more about installing Homestead [here](
+http://laravel.com/docs/5.0/homestead)
 
-## Official Documentation
+###Setup
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+You will need to install [composer](https://getcomposer.org/doc/00-intro.md). 
 
-## Contributing
+1. Clone this repository and change directory into it
+2. Run `composer install`
+3. If you are using homestead, set up the homestead configuration file with `homestead edit`, then ssh into the homestead machine with `homestead ssh` and change directory to the project's root. 
+4. Run the command `php artisan migrate`
+5. log into mysql (on homestead this can be done with `mysql -uroot -psecret`, the  `use homestead`, the `source database/migrations/ddl.sql`
+6. You will need to add an initial user to get anything done with the application (see the seeds section)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+#### Seeding
+To seed the database with test data, log into mysql, use homestead, then type `source database/seeds/seeds.sql`
+To create an administrative user, run the command `php artisan tinker`, then run the following
+```
+$u = new App\User;
+$u->name = "NAME";
+$u->email = "YOUR EMAIL";
+$u->password = Hash::make('PASSWORD');
+$u->producer_id = PRODUCER_ID; #only if producer id exists
+$u->admin = 1;
+$u->save();
+```
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-### License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)

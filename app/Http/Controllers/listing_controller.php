@@ -61,7 +61,7 @@ class listing_controller extends Controller
       $price = Input::get('price');
       $batch = Input::get('batch_id');
 
-      DB::statement("INSERT INTO Product (post_date, day_produced, member_id, quantity, use_by, product_type_id, price, batch_id) VALUES (\":post\", \":pdate\", :producer, :quantity, \":useby\", :type, :price, \":batch\")", ['post'=>$post, 'pdate'=>$date, 'producer'=>$producer, 'quantity'=>$quantity, 'useby'=>$useby, 'type'=>$type, 'price'=>$price, 'batch'=>$batch]);
+      DB::statement("INSERT INTO Product (post_date, day_produced, member_id, quantity, use_by, product_type_id, price, batch_id) VALUES (:post, :pdate, :producer, :quantity, :useby, :type, :price, :batch)", ['post'=>$post, 'pdate'=>$date, 'producer'=>$producer, 'quantity'=>$quantity, 'useby'=>$useby, 'type'=>$type, 'price'=>$price, 'batch'=>$batch]);
       return redirect('/');
 
 

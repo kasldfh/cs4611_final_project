@@ -29,7 +29,7 @@
       <td>{!!$order->order_date!!}</td> 
       <td>{!!$order->phone_number!!}</td> 
       <td>{!!$order->email!!}</td> 
-      <td><a href="transport?to={!!$address!!}">{!!$address!!}</a></td> 
+      <td><a href="/transport?to={!!$address!!}">{!!$address!!}</a></td> 
     </tr>
     
     <?php $i++;?>
