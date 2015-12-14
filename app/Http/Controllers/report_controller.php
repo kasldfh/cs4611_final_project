@@ -161,7 +161,7 @@ class report_controller extends Controller
             . "<body>";
             $info = Auth::user();
             $user_info = DB::select( DB::raw("SELECT name, email, phone_number FROM Producer WHERE member_id = :user"), ['user'=>$info->producer_id])[0];
-            echo "<div style = \"infocorner\"><h4>" . $user_info->name . "<br>" . $user_info->email . "<br>" . $user_info->phone_number . "<br>" . Carbon::now() . "</h4></div>";
+            echo "<div class = \"infocorner\"><h4>" . $user_info->name . "<br>" . $user_info->email . "<br>" . $user_info->phone_number . "<br>" . Carbon::now() . "</h4></div>";
             echo "<div><img src=\"/upload/posnic.png\" alt=\"cooperative\" style=\"width:152px;height:152;\" align=\"middle\"><h1>" . $report_title . " Report</h1></div>" . "<div>" . "<table border='4' class='stats center' cellspacing='0'>";
             if ($report_title != "Product") {
             	echo "<th>Producer Name</th>";

@@ -11,9 +11,9 @@
 			<option value="Product">Product</option>
 			<option value="Buying">Buying</option>
 		</select>
-		<input type="text" id="datepicker1" name="start_date">
-		<input type="text" id="datepicker2" name="end_date">
-		<input type="text" id="batchpicker" name="chosen_batch">
+		<input placeholder="Start Date (optional)" type="text" id="datepicker1" name="start_date">
+		<input placeholder="End Date (optional)" type="text" id="datepicker2" name="end_date">
+		<input placeholder="Batch Id (optional)" type="text" id="batchpicker" name="chosen_batch">
 		<br><br>
 		<button type="submit" style="margin-left:10%;">Generate Report</button>
 	</form>
